@@ -31,7 +31,7 @@ struct StartView: View {
                             .foregroundStyle(Color.black)
                         Button {
                             Task {
-//                                await vm.fetchQuiz()
+                                await vm.fetchQuiz()
                             }
                         } label: {
                             PrimaryButton(text: Constants.StringConstants.startButtonText)
