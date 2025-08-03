@@ -9,49 +9,49 @@ struct StartView: View {
     // MARK: Body
     
     var body: some View {
-            VStack(spacing: Constants.CardConstants.stackSpacing) {
-                VStack(spacing: Constants.CardConstants.innerStackSpacing) {
-                    historyButton
-                    
-                    Image(.logo)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(
-                            maxWidth: Constants.LogoConstants.width,
-                            maxHeight: Constants.LogoConstants.height
-                        )
-                        .padding(.bottom, Constants.LogoConstants.bottomPadding)
-
-                    
-                    VStack(spacing: Constants.CardConstants.stackSpacing) {
-                        Text(Constants.StringConstants.welcomeText)
-                            .multilineTextAlignment(.center)
-                            .font(.custom(.interRegularBold, size: Constants.TextConstants.welcomeFontSize))
-                            .foregroundStyle(Color.black)
-                        Button {
-                            Task {
-                                await vm.fetchQuiz()
-                            }
-                        } label: {
-                            PrimaryButton(text: Constants.StringConstants.startButtonText)
-                                .padding(.horizontal, Constants.CardConstants.horizontalPadding)
+        VStack(spacing: Constants.CardConstants.stackSpacing) {
+            VStack(spacing: Constants.CardConstants.innerStackSpacing) {
+                historyButton
+                
+                Image(.logo)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(
+                        maxWidth: Constants.LogoConstants.width,
+                        maxHeight: Constants.LogoConstants.height
+                    )
+                    .padding(.bottom, Constants.LogoConstants.bottomPadding)
+                
+                
+                VStack(spacing: Constants.CardConstants.stackSpacing) {
+                    Text(Constants.StringConstants.welcomeText)
+                        .multilineTextAlignment(.center)
+                        .font(.custom(.interRegularBold, size: Constants.TextConstants.welcomeFontSize))
+                        .foregroundStyle(Color.black)
+                    Button {
+                        Task {
+                            await vm.fetchQuiz()
                         }
+                    } label: {
+                        PrimaryButton(text: Constants.StringConstants.startButtonText)
+                            .padding(.horizontal, Constants.CardConstants.horizontalPadding)
                     }
-                    .padding(.horizontal, Constants.CardConstants.horizontalPadding)
-                    .padding(.vertical, Constants.CardConstants.verticalPadding)
-                    .background(Color.white)
-                    .cornerRadius(Constants.CardConstants.cardCornerRadius)
-                    
-                    Text(vm.errorMessage)
-                        .font(.custom(.interRegularBold, size: Constants.TextConstants.errorFontSize))
-                        .foregroundStyle(Color.white)
-                    
                 }
+                .padding(.horizontal, Constants.CardConstants.horizontalPadding)
+                .padding(.vertical, Constants.CardConstants.verticalPadding)
+                .background(Color.white)
+                .cornerRadius(Constants.CardConstants.cardCornerRadius)
+                
+                Text(vm.errorMessage)
+                    .font(.custom(.interRegularBold, size: Constants.TextConstants.errorFontSize))
+                    .foregroundStyle(Color.white)
+                
             }
-            .padding(.horizontal, Constants.OuterConstants.horizontalPadding)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .edgesIgnoringSafeArea(.all)
-            .background(.purpleApp)
+        }
+        .padding(.horizontal, Constants.OuterConstants.horizontalPadding)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .edgesIgnoringSafeArea(.all)
+        .background(.purpleApp)
     }
     
     private var historyButton: some View {
