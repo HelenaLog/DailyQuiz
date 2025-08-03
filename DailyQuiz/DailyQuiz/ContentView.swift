@@ -1,14 +1,31 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var vm: QuizViewModel
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack {
+            switch vm.gamePhase {
+            case .loading:
+                StartView()
+                    .environmentObject(vm)
+                    .transition(.opacity)
+            case .start:
+                StartView()
+                    .environmentObject(vm)
+                    .transition(.slide)
+            case .game:
+                if vm.reachedEnd {
+                    StartView()
+                        .environmentObject(vm)
+                        .transition(.opacity)
+                } else {
+                    QuestionView()
+                        .environmentObject(vm)
+                        .transition(.slide)
+                }
+            }
         }
-        .padding()
     }
 }
 
