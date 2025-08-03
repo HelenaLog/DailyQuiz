@@ -18,7 +18,7 @@ struct Results: Decodable, Identifiable {
             return try AttributedString(markdown: question)
         } catch {
             print("Error setting formatted Question: \(error)")
-            return ""
+            return AttributedString()
         }
     }
     

@@ -9,8 +9,8 @@ struct QuestionView: View {
     // MARK: Body
     
     var body: some View {
-        VStack(spacing: 40) {
-            HStack(alignment: .center, spacing: 10) {
+        VStack(spacing: Constants.SpacingConstants.outerStackSpacing) {
+            HStack(alignment: .center, spacing: Constants.SpacingConstants.headerHStackSpacing) {
                 Button(action: {
                     vm.gamePhase = .start
                 }) {
@@ -21,29 +21,30 @@ struct QuestionView: View {
                         Image(.leftIcon)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 24, height: 24)
+                            .frame(
+                                width: Constants.IconConstants.leftIconSize,
+                                height: Constants.IconConstants.leftIconSize
+                            )
                     }
                 }
                 Spacer()
                 Image(.logo)
                     .resizable()
                     .scaledToFit()
-                    .frame(maxWidth: 180, maxHeight: 40.6)
+                    .frame(maxWidth: Constants.LogoConstants.width, maxHeight: Constants.LogoConstants.height)
                     .frame(alignment: .center)
                 Spacer()
             }
             .frame(maxWidth: .infinity)
-            VStack(spacing: 20) {
+            VStack(spacing: Constants.SpacingConstants.innerStackSpacing) {
                 TimeProgress()
                     .environmentObject(vm)
-                    .frame(height: 28)
-                Text("Вопрос \(vm.index + 1) из \(vm.length)")
-                    .font(.custom(.interRegularBold, size: 16))
+                Text("\(Constants.StringConstants.questionPrefix) \(vm.index + 1) \(Constants.StringConstants.questionSuffix) \(vm.length)")
+                    .font(.custom(.interRegularBold, size: Constants.TextConstants.questionNumberFontSize))
                     .foregroundStyle(Color.lightPurpleApp)
-                
                 Text(vm.question)
                     .multilineTextAlignment(.leading)
-                    .font(.system(size: 20))
+                    .font(.system(size: Constants.TextConstants.questionFontSize))
                     .bold()
                     .foregroundStyle(Color.black)
                 
@@ -51,24 +52,25 @@ struct QuestionView: View {
                     AnswerRow(answer: answer)
                         .environmentObject(vm)
                 }
+                
                 Button {
                     vm.getToNextQuestion()
                 } label: {
-                    PrimaryButton(text: "ДАЛЕЕ", backgroundColor: vm.answerSelected ? Color.purpleApp : Color.grayApp)
+                    PrimaryButton(text: Constants.StringConstants.nextButtonText, backgroundColor: vm.answerSelected ? Color.purpleApp : Color.grayApp)
                 }
                 .disabled(!vm.answerSelected)
             }
-            .padding(.horizontal, 24)
-            .padding(.vertical, 32)
+            .padding(.horizontal, Constants.CardConstants.horizontalPadding)
+            .padding(.vertical, Constants.CardConstants.verticalPadding)
             .background(Color.white)
-            .cornerRadius(46)
+            .cornerRadius(Constants.CardConstants.cardCornerRadius)
             
-            Text("Вернуться к предыдущим вопросам нельзя")
-                .font(.custom(.interRegular, size: 10))
+            Text(Constants.StringConstants.noReturnText)
+                .font(.custom(.interRegular, size: Constants.TextConstants.noReturnFontSize))
                 .foregroundStyle(Color.white)
             
         }
-        .padding()
+        .padding(Constants.SpacingConstants.outerPadding)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.purpleApp)
         .navigationBarHidden(true)
@@ -79,4 +81,45 @@ struct QuestionView: View {
 #Preview {
     QuestionView()
         .environmentObject(QuizViewModel())
+}
+
+// MARK: - Constants
+
+private extension QuestionView {
+    enum Constants {
+        enum TextConstants {
+            static let questionNumberFontSize: CGFloat = 16
+            static let questionFontSize: CGFloat = 20
+            static let noReturnFontSize: CGFloat = 10
+        }
+        
+        enum SpacingConstants {
+            static let outerStackSpacing: CGFloat = 40
+            static let headerHStackSpacing: CGFloat = 10
+            static let innerStackSpacing: CGFloat = 20
+            static let outerPadding: CGFloat = 16
+        }
+        
+        enum StringConstants {
+            static let questionPrefix = "Вопрос"
+            static let questionSuffix = "из"
+            static let nextButtonText = "ДАЛЕЕ"
+            static let noReturnText = "Вернуться к предыдущим вопросам нельзя"
+        }
+        
+        enum LogoConstants {
+            static let width: CGFloat = 180
+            static let height: CGFloat = 40.6
+        }
+        
+        enum IconConstants {
+            static let leftIconSize: CGFloat = 24
+        }
+        
+        enum CardConstants {
+            static let horizontalPadding: CGFloat = 24
+            static let verticalPadding: CGFloat = 32
+            static let cardCornerRadius: CGFloat = 46
+        }
+    }
 }

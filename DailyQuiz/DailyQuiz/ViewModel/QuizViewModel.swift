@@ -9,6 +9,8 @@ enum GamePhase: Int {
 
 final class QuizViewModel: ObservableObject {
     
+    // MARK: Properties
+    
     @Published private(set) var trivia: [Results] = []
     @Published private(set) var length = 0
     @Published private(set) var index = 0
@@ -18,14 +20,14 @@ final class QuizViewModel: ObservableObject {
     @Published private(set) var answerChoices: [Answer] = []
     @Published private(set) var progress: CGFloat = 0.00
     @Published private(set) var score = 0
-    @Published private(set) var date: Date = Date.now
-    @Published private(set) var errorMessage: String = String()
-    @Published private(set) var selectedAnswers: [Int: Answer] = [:]
-    @Published private(set) var gameTime: Double = 10
-    @Published private(set) var time: Double = 0
     @Published var gamePhase: GamePhase = .start
-    @Published private var allQuiz: [Quiz] = UserDefaultsStorage.shared.read(forKey: "allQuiz") ?? []
-    
+    @Published var date: Date = Date.now
+    @Published var errorMessage: String = String()
+    @Published var selectedAnswerIndices = [Int: Int]()
+    @Published var selectedAnswers: [Int: Answer] = [:]
+    @Published var allQuiz: [Quiz] = UserDefaultsStorage.shared.read(forKey: "allQuiz") ?? []
+    @Published var gameTime: Double = 10
+    @Published var time: Double = 0
     private var timer: AnyCancellable?
     private var cancellables = Set<AnyCancellable>()
     private let storage: UserDefaultsStorage
@@ -42,9 +44,11 @@ final class QuizViewModel: ObservableObject {
     }
 }
 
+// MARK: - Public methods
+
 extension QuizViewModel {
     
-    @MainActor func fetchQuiz() async {
+     @MainActor func fetchQuiz() async {
         gamePhase = .loading
         do {
             let triviaResult = try await apiService.fetchQuestions()
@@ -55,8 +59,10 @@ extension QuizViewModel {
             index = 0
             score = 0
             progress = 0.00
+            selectedAnswerIndices = [:]
             selectedAnswers = [:]
             setQuestion()
+            setupTimer()
             gamePhase = .game
         } catch {
             self.gamePhase = .start
@@ -64,35 +70,21 @@ extension QuizViewModel {
         }
     }
     
-    func getToNextQuestion() {
+     func getToNextQuestion() {
         if index + 1 < length {
             index += 1
             setQuestion()
         } else {
             reachedEnd = true
-            
             processUnansweredQuestions()
             saveNewQuiz()
+            resetTimer()
         }
-    }
-    
-    func setQuestion() {
-        answerSelected = false
-        progress = CGFloat(Double(index + 1) / Double(length) * 360)
-        
-        if index < length {
-            let currentQuestion = trivia[index]
-            question = currentQuestion.formattedQuestion
-            answerChoices = currentQuestion.answers
-            print("Question \(index) answers: \(answerChoices.map { "\($0.text): \($0.isCorrect)" })")
-        }
-        
     }
     
     func selectAnswer(answer: Answer) {
         answerSelected = true
         selectedAnswers[index] = answer
-        print("Selected answer for question \(index): \(answer.text), id: \(answer.id), isCorrect: \(answer.isCorrect)")
         if answer.isCorrect {
             score += 1
         }
@@ -107,18 +99,6 @@ extension QuizViewModel {
         allQuiz.append(item)
         saveData()
         getData()
-    }
-    
-    func saveData() {
-        storage.save(structs: allQuiz, forKey: "allQuiz")
-    }
-    
-    func getData() {
-        allQuiz = storage.read(forKey: "allQuiz") ?? []
-    }
-
-    func deleteAllData() {
-        storage.delete(forKey: "allQuiz")
     }
     
     func deleteQuiz(at id: String) {
@@ -151,7 +131,33 @@ extension QuizViewModel {
     }
 }
 
-extension QuizViewModel {
+// MARK: - Private methods
+
+private extension QuizViewModel {
+    
+    func setQuestion() {
+         answerSelected = false
+         progress = CGFloat(Double(index + 1) / Double(length) * 360)
+         
+         if index < length {
+             let currentQuestion = trivia[index]
+             question = currentQuestion.formattedQuestion
+             answerChoices = currentQuestion.answers
+         }
+        
+     }
+    
+    func saveData() {
+        storage.save(structs: allQuiz, forKey: "allQuiz")
+    }
+    
+    func getData() {
+        allQuiz = storage.read(forKey: "allQuiz") ?? []
+    }
+    
+    func deleteAllData() {
+        storage.delete(forKey: "allQuiz")
+    }
     
     func setupTimer() {
         Timer.publish(every: 0.1, on: .main, in: .common)
@@ -168,7 +174,7 @@ extension QuizViewModel {
             .store(in: &cancellables)
     }
     
-    private func resetTimer() {
+    func resetTimer() {
         time = 0
         cancellables.forEach { $0.cancel() }
     }

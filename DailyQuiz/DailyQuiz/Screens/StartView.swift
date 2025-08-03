@@ -35,11 +35,11 @@ struct StartView: View {
                             }
                         } label: {
                             PrimaryButton(text: Constants.StringConstants.startButtonText)
-                                .padding(.horizontal, 40)
+                                .padding(.horizontal, Constants.CardConstants.horizontalPadding)
                         }
                     }
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 32)
+                    .padding(.horizontal, Constants.CardConstants.horizontalPadding)
+                    .padding(.vertical, Constants.CardConstants.verticalPadding)
                     .background(Color.white)
                     .cornerRadius(Constants.CardConstants.cardCornerRadius)
                     
@@ -49,7 +49,7 @@ struct StartView: View {
                     
                 }
             }
-            .padding(.horizontal, 16)
+            .padding(.horizontal, Constants.OuterConstants.horizontalPadding)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .edgesIgnoringSafeArea(.all)
             .background(.purpleApp)
@@ -61,23 +61,22 @@ struct StartView: View {
             print("History")
         } label: {
             NavigationLink {
-//                HistoryView()
-//                    .environmentObject(vm)
+                HistoryView()
+                    .environmentObject(vm)
             } label: {
                 HStack {
                     Text(Constants.StringConstants.historyButtonText)
-                        .font(.custom(.interRegularSemibold, size: 12))
+                        .font(.custom(.interRegularSemibold, size: Constants.TextConstants.historyFontSize))
                     Image(.historyIcon)
                 }
                 .foregroundStyle(.purpleApp)
-                .padding(12)
+                .padding(Constants.ButtonConstants.padding)
                 .background(.white)
-                .cornerRadius(24)
-                .padding(.bottom, 114)
+                .cornerRadius(Constants.ButtonConstants.historyCornerRadius)
+                .padding(.bottom, Constants.ButtonConstants.historyBottomPadding)
             }
         }
     }
-
 }
 
 #Preview {
@@ -108,6 +107,7 @@ private extension StartView {
             static let buttonCornerRadius: CGFloat = 16
             static let historyCornerRadius: CGFloat = 24
             static let historyBottomPadding: CGFloat = 114
+            static let padding: CGFloat = 12
         }
         
         enum StringConstants {
@@ -118,9 +118,14 @@ private extension StartView {
         
         enum CardConstants {
             static let cardCornerRadius: CGFloat = 46
-            static let cardPadding = EdgeInsets(top: 32, leading: 24, bottom: 32, trailing: 24)
+            static let horizontalPadding: CGFloat = 24
+            static let verticalPadding: CGFloat = 32
             static let stackSpacing: CGFloat = 40
             static let innerStackSpacing: CGFloat = 20
+        }
+        
+        enum OuterConstants {
+            static let horizontalPadding: CGFloat = 16
         }
     }
 }
