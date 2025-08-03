@@ -16,7 +16,7 @@ struct ContentView: View {
                     .transition(.slide)
             case .game:
                 if vm.reachedEnd {
-                    StartView()
+                    ResultView()
                         .environmentObject(vm)
                         .transition(.opacity)
                 } else {
