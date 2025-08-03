@@ -7,7 +7,7 @@ struct ContentView: View {
         NavigationStack {
             switch vm.gamePhase {
             case .loading:
-                StartView()
+                GameLoadView()
                     .environmentObject(vm)
                     .transition(.opacity)
             case .start:

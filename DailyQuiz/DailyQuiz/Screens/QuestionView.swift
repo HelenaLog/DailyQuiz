@@ -12,7 +12,6 @@ struct QuestionView: View {
         VStack(spacing: 40) {
             HStack(alignment: .center, spacing: 10) {
                 Button(action: {
-                    print("Back button tapped")
                     vm.gamePhase = .start
                 }) {
                     NavigationLink {
@@ -37,6 +36,7 @@ struct QuestionView: View {
             VStack(spacing: 20) {
                 TimeProgress()
                     .environmentObject(vm)
+                    .frame(height: 28)
                 Text("Вопрос \(vm.index + 1) из \(vm.length)")
                     .font(.custom(.interRegularBold, size: 16))
                     .foregroundStyle(Color.lightPurpleApp)
@@ -51,11 +51,10 @@ struct QuestionView: View {
                     AnswerRow(answer: answer)
                         .environmentObject(vm)
                 }
-                
                 Button {
                     vm.getToNextQuestion()
                 } label: {
-                    PrimaryButton(text: "ДАЛЕЕ", backgroundColor: vm.answerSelected ? Color.lightPurpleApp : Color.grayApp)
+                    PrimaryButton(text: "ДАЛЕЕ", backgroundColor: vm.answerSelected ? Color.purpleApp : Color.grayApp)
                 }
                 .disabled(!vm.answerSelected)
             }
@@ -71,7 +70,7 @@ struct QuestionView: View {
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.lightPurpleApp)
+        .background(Color.purpleApp)
         .navigationBarHidden(true)
         
     }

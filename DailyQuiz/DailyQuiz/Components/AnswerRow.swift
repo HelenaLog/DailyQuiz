@@ -3,7 +3,6 @@ import SwiftUI
 struct AnswerRow: View {
     @EnvironmentObject var vm: QuizViewModel
     @State private var isSelected = false
-    
     var answer: Answer
     var green = Color.green
     var red = Color.red
@@ -11,7 +10,7 @@ struct AnswerRow: View {
     var body: some View {
         HStack(spacing: 20) {
             if isSelected {
-                Image(answer.isCorrect ? "selectedRight" : "wrong")
+                Image(answer.isCorrect ? "selectedRight" : "selectedWrong")
                     .foregroundStyle(answer.isCorrect ? .greenApp : .redApp)
                 Text(answer.text)
                     .foregroundStyle(answer.isCorrect ? .greenApp : .redApp)
@@ -41,3 +40,4 @@ struct AnswerRow: View {
     AnswerRow(answer: Answer(text: "Single", isCorrect: false))
         .environmentObject(QuizViewModel())
 }
+
