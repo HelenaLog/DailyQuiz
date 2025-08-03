@@ -59,16 +59,11 @@ struct ResultView: View {
                 Button {
                     vm.gamePhase = .start
                 } label: {
-                    NavigationLink{
-                        StartView()
-                            .environmentObject(vm)
-                    } label: {
-                        PrimaryButton(
-                            text: Constants.StringConstants.restartButtonText,
-                            textColor: .darkPurpleApp,
-                            backgroundColor: .white
-                        )
-                    }
+                    PrimaryButton(
+                        text: Constants.StringConstants.restartButtonText,
+                        textColor: .darkPurpleApp,
+                        backgroundColor: .white
+                    )
                 }
                 .padding(.horizontal, Constants.SpacingConstants.buttonHorizontalPadding)
             }

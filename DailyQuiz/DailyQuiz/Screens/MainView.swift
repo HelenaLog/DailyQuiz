@@ -29,6 +29,10 @@ struct MainView: View {
                         .environmentObject(vm)
                         .transition(.slide)
                 }
+            case .history:
+                HistoryView()
+                    .environmentObject(vm)
+                    .transition(.slide)
             }
         }
     }

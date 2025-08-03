@@ -9,7 +9,6 @@ struct StartView: View {
     // MARK: Body
     
     var body: some View {
-        NavigationView {
             VStack(spacing: Constants.CardConstants.stackSpacing) {
                 VStack(spacing: Constants.CardConstants.innerStackSpacing) {
                     historyButton
@@ -53,7 +52,6 @@ struct StartView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .edgesIgnoringSafeArea(.all)
             .background(.purpleApp)
-        }
     }
     
     private var historyButton: some View {
