@@ -35,7 +35,6 @@ private extension TriviaNetworkClient {
         guard let url = createURL(for: endpoint) else {
             throw NetworkError.invalidURL
         }
-        print(url)
         let request = NetworkRequest(
             url: url,
             method: endpoint.method

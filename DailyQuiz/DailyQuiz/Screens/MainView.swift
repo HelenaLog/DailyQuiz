@@ -1,7 +1,12 @@
 import SwiftUI
 
-struct ContentView: View {
+struct MainView: View {
+    
+    // MARK: Properties
+    
     @EnvironmentObject var vm: QuizViewModel
+    
+    // MARK: Body
     
     var body: some View {
         NavigationStack {
@@ -30,5 +35,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    MainView()
 }
