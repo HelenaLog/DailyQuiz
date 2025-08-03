@@ -10,9 +10,22 @@
 		4DD292BC2E3FCB1500B9FC2A /* DailyQuiz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyQuiz.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		4DCAFF932E3FD00400307F66 /* Exceptions for "DailyQuiz" folder in "DailyQuiz" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 4DD292BB2E3FCB1500B9FC2A /* DailyQuiz */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4DD292BE2E3FCB1500B9FC2A /* DailyQuiz */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				4DCAFF932E3FD00400307F66 /* Exceptions for "DailyQuiz" folder in "DailyQuiz" target */,
+			);
 			path = DailyQuiz;
 			sourceTree = "<group>";
 		};
@@ -254,6 +267,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"DailyQuiz/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DailyQuiz/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -282,6 +296,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"DailyQuiz/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DailyQuiz/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
