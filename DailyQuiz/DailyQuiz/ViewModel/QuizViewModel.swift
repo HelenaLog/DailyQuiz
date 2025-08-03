@@ -26,7 +26,7 @@ final class QuizViewModel: ObservableObject {
     @Published var selectedAnswerIndices = [Int: Int]()
     @Published var selectedAnswers: [Int: Answer] = [:]
     @Published var allQuiz: [Quiz] = UserDefaultsStorage.shared.read(forKey: "allQuiz") ?? []
-    @Published var gameTime: Double = 10
+    @Published var gameTime: Double = 300
     @Published var time: Double = 0
     private var timer: AnyCancellable?
     private var cancellables = Set<AnyCancellable>()
