@@ -1,7 +1,12 @@
 import SwiftUI
 
 struct HistoryView: View {
+    
+    // MARK: Properties
+    
     @EnvironmentObject var vm: QuizViewModel
+    
+    // MARK: Body
     
     var body: some View {
         VStack {
@@ -45,7 +50,6 @@ struct HistoryView: View {
                 }
             }
         }
-        .padding(Constants.SpacingConstants.outerPadding)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.purpleApp)
         .navigationBarHidden(true)
