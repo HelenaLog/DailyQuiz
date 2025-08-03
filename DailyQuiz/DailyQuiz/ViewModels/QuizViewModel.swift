@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 enum GamePhase: Int {
     case loading
@@ -23,15 +24,43 @@ final class QuizViewModel: ObservableObject {
     @Published private(set) var gameTime: Double = 10
     @Published private(set) var time: Double = 0
     @Published var gamePhase: GamePhase = .start
+    @Published private var allQuiz: [Quiz] = UserDefaultsStorage.shared.read(forKey: "allQuiz") ?? []
+    
+    private var timer: AnyCancellable?
+    private var cancellables = Set<AnyCancellable>()
+    private let storage: UserDefaultsStorage
+    private let apiService: APIServiceType
+    
+    // MARK: Init
+    
+    init(
+        storage: UserDefaultsStorage = UserDefaultsStorage.shared,
+        apiService: APIServiceType = TriviaNetworkClient.shared
+    ) {
+        self.storage = storage
+        self.apiService = apiService
+    }
 }
 
 extension QuizViewModel {
     
-    func selectAnswer(answer: Answer) {
-        answerSelected = true
-        selectedAnswers[index] = answer
-        if answer.isCorrect {
-            score += 1
+    @MainActor func fetchQuiz() async {
+        gamePhase = .loading
+        do {
+            let triviaResult = try await apiService.fetchQuestions()
+            trivia = triviaResult.results
+            length = trivia.count
+            score = 0
+            reachedEnd = false
+            index = 0
+            score = 0
+            progress = 0.00
+            selectedAnswers = [:]
+            setQuestion()
+            gamePhase = .game
+        } catch {
+            self.gamePhase = .start
+            errorMessage = "Ошибка! Попробуйте еще раз"
         }
     }
     
@@ -41,19 +70,116 @@ extension QuizViewModel {
             setQuestion()
         } else {
             reachedEnd = true
+            
+            processUnansweredQuestions()
+            saveNewQuiz()
         }
     }
     
     func setQuestion() {
-         answerSelected = false
-         progress = CGFloat(Double(index + 1) / Double(length) * 360)
-         
-         if index < length {
-             let currentQuestion = trivia[index]
-             question = currentQuestion.formattedQuestion
-             answerChoices = currentQuestion.answers
-             print("Question \(index) answers: \(answerChoices.map { "\($0.text): \($0.isCorrect)" })")
-         }
+        answerSelected = false
+        progress = CGFloat(Double(index + 1) / Double(length) * 360)
         
-     }
+        if index < length {
+            let currentQuestion = trivia[index]
+            question = currentQuestion.formattedQuestion
+            answerChoices = currentQuestion.answers
+            print("Question \(index) answers: \(answerChoices.map { "\($0.text): \($0.isCorrect)" })")
+        }
+        
+    }
+    
+    func selectAnswer(answer: Answer) {
+        answerSelected = true
+        selectedAnswers[index] = answer
+        print("Selected answer for question \(index): \(answer.text), id: \(answer.id), isCorrect: \(answer.isCorrect)")
+        if answer.isCorrect {
+            score += 1
+        }
+    }
+    
+    func saveNewQuiz() {
+        let item = Quiz(
+            number: allQuiz.count + 1,
+            rating: score,
+            date: date
+        )
+        allQuiz.append(item)
+        saveData()
+        getData()
+    }
+    
+    func saveData() {
+        storage.save(structs: allQuiz, forKey: "allQuiz")
+    }
+    
+    func getData() {
+        allQuiz = storage.read(forKey: "allQuiz") ?? []
+    }
+
+    func deleteAllData() {
+        storage.delete(forKey: "allQuiz")
+    }
+    
+    func deleteQuiz(at id: String) {
+        if let index = allQuiz.firstIndex(where: { $0.id == id }) {
+            allQuiz.remove(at: index)
+        }
+        allQuiz = allQuiz.enumerated().map { (index, quiz) in
+            Quiz(
+                id: quiz.id,
+                number: index + 1,
+                rating: quiz.rating,
+                date: quiz.date
+            )
+        }
+        saveData()
+    }
+    
+    func dateFormatter(date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd MMMM"
+        let dayMonthString = dateFormatter.string(from: date)
+        return dayMonthString
+    }
+    
+    func hourFormatter(time: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+        let dayMonthString = dateFormatter.string(from: time)
+        return dayMonthString
+    }
+}
+
+extension QuizViewModel {
+    
+    func setupTimer() {
+        Timer.publish(every: 0.1, on: .main, in: .common)
+            .autoconnect()
+            .sink { [unowned self] _ in
+                time += 0.1
+                if time >= gameTime {
+                    resetTimer()
+                    processUnansweredQuestions()
+                    reachedEnd = true
+                    saveNewQuiz()
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func resetTimer() {
+        time = 0
+        cancellables.forEach { $0.cancel() }
+    }
+    
+    private func processUnansweredQuestions() {
+        for i in 0..<length {
+            if selectedAnswers[i] == nil {
+                if let incorrectAnswer = trivia[i].answers.first(where: { !$0.isCorrect }) {
+                    selectedAnswers[i] = incorrectAnswer
+                }
+            }
+        }
+    }
 }
