@@ -5,6 +5,7 @@ enum GamePhase: Int {
     case loading
     case start
     case game
+    case history
 }
 
 final class QuizViewModel: ObservableObject {
