@@ -30,6 +30,9 @@ struct StartView: View {
                             .font(.custom(.interRegularBold, size: Constants.TextConstants.welcomeFontSize))
                             .foregroundStyle(Color.black)
                         Button {
+                            Task {
+//                                await vm.fetchQuiz()
+                            }
                         } label: {
                             PrimaryButton(text: Constants.StringConstants.startButtonText)
                                 .padding(.horizontal, 40)
@@ -40,7 +43,7 @@ struct StartView: View {
                     .background(Color.white)
                     .cornerRadius(Constants.CardConstants.cardCornerRadius)
                     
-                    Text("Ошибка! Попробуйте еще раз")
+                    Text(vm.errorMessage)
                         .font(.custom(.interRegularBold, size: Constants.TextConstants.errorFontSize))
                         .foregroundStyle(Color.white)
                     
@@ -50,9 +53,6 @@ struct StartView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .edgesIgnoringSafeArea(.all)
             .background(.purpleApp)
-            .onAppear {
-                
-            }
         }
     }
     
@@ -61,6 +61,8 @@ struct StartView: View {
             print("History")
         } label: {
             NavigationLink {
+//                HistoryView()
+//                    .environmentObject(vm)
             } label: {
                 HStack {
                     Text(Constants.StringConstants.historyButtonText)
@@ -75,11 +77,12 @@ struct StartView: View {
             }
         }
     }
+
 }
 
 #Preview {
     StartView()
-        
+        .environmentObject(QuizViewModel())
 }
 
 // MARK: - Constants
