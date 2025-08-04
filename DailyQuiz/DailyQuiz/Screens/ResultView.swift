@@ -9,7 +9,7 @@ struct ResultView: View {
     // MARK: Body
     
     var body: some View {
-        VStack() {
+        VStack {
             Text(Constants.StringConstants.resultsTitle)
                 .font(.custom(.interRegularBlack, size: Constants.TextConstants.titleFontSize))
                 .foregroundStyle(Color.white)
@@ -39,12 +39,11 @@ struct ResultView: View {
                 .padding(.vertical, Constants.CardConstants.verticalPadding)
                 .background(Color.white)
                 .cornerRadius(Constants.CardConstants.cardCornerRadius)
-                
                 Text(Constants.StringConstants.yourAnswersTitle)
                     .font(.custom(.interRegularBlack, size: Constants.TextConstants.titleFontSize))
                     .foregroundStyle(Color.white)
                     .padding(.vertical, Constants.SpacingConstants.answersTitleVerticalPadding)
-                VStack {
+                VStack(spacing: 24) {
                     ForEach(Array(vm.trivia.enumerated()), id: \.element.id) { (index, result) in
                         AnswerView(
                             question: result.formattedQuestion,
@@ -55,7 +54,8 @@ struct ResultView: View {
                         )
                     }
                 }
-                
+                .padding(.horizontal, Constants.CardConstants.horizontalPadding)
+                .padding(.bottom, Constants.SpacingConstants.cardBottomPadding)
                 Button {
                     vm.gamePhase = .start
                 } label: {
@@ -65,16 +65,15 @@ struct ResultView: View {
                         backgroundColor: .white
                     )
                 }
-                .padding(.horizontal, Constants.SpacingConstants.buttonHorizontalPadding)
+                .padding(
+                    .horizontal,
+                    Constants.SpacingConstants.buttonHorizontalPadding
+                )
             }
         }
-        .padding(Constants.SpacingConstants.outerPadding)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.purpleApp)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationBarHidden(true)
-        .onAppear {
-            vm.saveNewQuiz()
-        }
     }
 }
 
@@ -100,7 +99,7 @@ private extension ResultView {
             static let feedbackBottomPadding: CGFloat = 12
             static let answersTitleVerticalPadding: CGFloat = 32
             static let buttonHorizontalPadding: CGFloat = 40
-            static let outerPadding: CGFloat = 16
+            static let cardBottomPadding: CGFloat = 24
         }
         
         enum StringConstants {

@@ -1,7 +1,12 @@
 import SwiftUI
 
 struct TimeProgress: View {
+    
+    // MARK: - Properties
+    
     @EnvironmentObject var vm: QuizViewModel
+    
+    // MARK: Body
     
     var body: some View {
         GeometryReader { geo in
