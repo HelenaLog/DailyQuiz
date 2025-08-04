@@ -9,8 +9,11 @@ struct QuestionView: View {
     // MARK: Body
     
     var body: some View {
-        VStack(spacing: Constants.SpacingConstants.outerStackSpacing) {
-            HStack(alignment: .center, spacing: Constants.SpacingConstants.headerHStackSpacing) {
+        VStack {
+            HStack(
+                alignment: .center,
+                spacing: Constants.SpacingConstants.headerHStackSpacing
+            ) {
                 Button(action: {
                     vm.gamePhase = .start
                 }) {
@@ -36,23 +39,22 @@ struct QuestionView: View {
                 Spacer()
             }
             .frame(maxWidth: .infinity)
+            .padding(.bottom, Constants.SpacingConstants.headerToCardSpacing)
             VStack(spacing: Constants.SpacingConstants.innerStackSpacing) {
                 TimeProgress()
                     .environmentObject(vm)
+                    .frame(height: Constants.TimeProgressConstants.height)
                 Text("\(Constants.StringConstants.questionPrefix) \(vm.index + 1) \(Constants.StringConstants.questionSuffix) \(vm.length)")
                     .font(.custom(.interRegularBold, size: Constants.TextConstants.questionNumberFontSize))
                     .foregroundStyle(Color.lightPurpleApp)
                 Text(vm.question)
-                    .multilineTextAlignment(.leading)
-                    .font(.system(size: Constants.TextConstants.questionFontSize))
-                    .bold()
-                    .foregroundStyle(Color.black)
-                
+                    .multilineTextAlignment(.center)
+                    .font(.custom(.interRegularSemibold, size: Constants.TextConstants.questionFontSize))
+                    .frame(maxWidth: .infinity, alignment: .center)
                 ForEach(vm.answerChoices, id: \.id) { answer in
                     AnswerRow(answer: answer)
                         .environmentObject(vm)
                 }
-                
                 Button {
                     vm.getToNextQuestion()
                 } label: {
@@ -64,17 +66,15 @@ struct QuestionView: View {
             .padding(.vertical, Constants.CardConstants.verticalPadding)
             .background(Color.white)
             .cornerRadius(Constants.CardConstants.cardCornerRadius)
-            
+            .padding(.bottom, Constants.SpacingConstants.cardToNoReturnSpacing)
             Text(Constants.StringConstants.noReturnText)
                 .font(.custom(.interRegular, size: Constants.TextConstants.noReturnFontSize))
                 .foregroundStyle(Color.white)
-            
         }
         .padding(Constants.SpacingConstants.outerPadding)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.purpleApp)
         .navigationBarHidden(true)
-        
     }
 }
 
@@ -89,15 +89,16 @@ private extension QuestionView {
     enum Constants {
         enum TextConstants {
             static let questionNumberFontSize: CGFloat = 16
-            static let questionFontSize: CGFloat = 20
+            static let questionFontSize: CGFloat = 18
             static let noReturnFontSize: CGFloat = 10
         }
         
         enum SpacingConstants {
-            static let outerStackSpacing: CGFloat = 40
             static let headerHStackSpacing: CGFloat = 10
             static let innerStackSpacing: CGFloat = 20
-            static let outerPadding: CGFloat = 16
+            static let outerPadding: CGFloat = 26
+            static let headerToCardSpacing: CGFloat = 40
+            static let cardToNoReturnSpacing: CGFloat = 16
         }
         
         enum StringConstants {
@@ -120,6 +121,10 @@ private extension QuestionView {
             static let horizontalPadding: CGFloat = 24
             static let verticalPadding: CGFloat = 32
             static let cardCornerRadius: CGFloat = 46
+        }
+        
+        enum TimeProgressConstants {
+            static let height: CGFloat = 23.53
         }
     }
 }

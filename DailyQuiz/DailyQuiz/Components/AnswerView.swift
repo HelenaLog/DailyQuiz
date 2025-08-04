@@ -1,12 +1,17 @@
 import SwiftUI
 
 struct AnswerView: View {
+    
+    // MARK: Properties
+    
     @EnvironmentObject var vm: QuizViewModel
     var question: AttributedString
     var answers: [Answer]
     var questionNumber: Int
     var totalQuestions: Int
     var questionIndex: Int
+    
+    // MARK: Body
     
     var body: some View {
         VStack(spacing: 20) {
@@ -97,7 +102,9 @@ private extension AnswerView {
 }
 
 #Preview {
-    AnswerView(question: "Aboba", answers: [
+    AnswerView(
+        question: "What was the name of the WWF professional wrestling tag team made up of the wrestlers Ax and Smash?",
+        answers: [
         Answer(text: "Answer1", isCorrect: true),
         Answer(text: "Answer2", isCorrect: false),
         Answer(text: "Answer3", isCorrect: false),
