@@ -180,7 +180,7 @@ private extension QuizViewModel {
         cancellables.forEach { $0.cancel() }
     }
     
-    private func processUnansweredQuestions() {
+    func processUnansweredQuestions() {
         for i in 0..<length {
             if selectedAnswers[i] == nil {
                 if let incorrectAnswer = trivia[i].answers.first(where: { !$0.isCorrect }) {

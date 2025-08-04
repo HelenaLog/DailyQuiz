@@ -29,21 +29,23 @@ struct HistoryView: View {
                     .padding(.bottom, Constants.LogoConstants.bottomPadding)
             } else {
                 ScrollView(showsIndicators: false) {
-                    ForEach(vm.allQuiz, id: \.id) { quiz in
-                        HistoryRow(
-                            number: quiz.number,
-                            score: quiz.rating,
-                            date: vm.dateFormatter(date: quiz.date),
-                            time: vm.hourFormatter(time: quiz.date)
-                        )
-                        .padding(.horizontal, Constants.SpacingConstants.rowHorizontalPadding)
-                        .contextMenu {
-                            Button(role: .destructive) {
-                                withAnimation(.none) {
-                                    vm.deleteQuiz(at: quiz.id)
+                    LazyVStack {
+                        ForEach(vm.allQuiz, id: \.id) { quiz in
+                            HistoryRow(
+                                number: quiz.number,
+                                score: quiz.rating,
+                                date: vm.dateFormatter(date: quiz.date),
+                                time: vm.hourFormatter(time: quiz.date)
+                            )
+                            .padding(.horizontal, Constants.SpacingConstants.rowHorizontalPadding)
+                            .contextMenu {
+                                Button(role: .destructive) {
+                                    withAnimation(.none) {
+                                        vm.deleteQuiz(at: quiz.id)
+                                    }
+                                } label: {
+                                    Label(Constants.StringConstants.deleteLabel, systemImage: Constants.StringConstants.trashIcon)
                                 }
-                            } label: {
-                                Label(Constants.StringConstants.deleteLabel, systemImage: Constants.StringConstants.trashIcon)
                             }
                         }
                     }
